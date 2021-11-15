@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div id="homepage">
+        <p style="font-size: 20px">
+            <span><a {% if shelf=='current' %} disabled style="background: #cccccc" {% else %}
+                                               href="{{ url_for('book_bp.my_books', shelf='current') }}" {% endif %} >Currently Reading</a> <span>&nbsp;·&nbsp;</span></span>
+            <span><a {% if shelf=='want' %} disabled style="background: #cccccc" {% else %}
+                                            href="{{ url_for('book_bp.my_books', shelf='want') }}" {% endif %} >Want to Read</a> <span>&nbsp;·&nbsp;</span></span>
+            <span><a {% if shelf=='read' %} disabled style="background: #cccccc" {% else %}
+                                            href="{{ url_for('book_bp.my_books', shelf='read') }}" {% endif %} >Read</a></span>
+        </p>
+
+        <section id="services" class="clear">
+            {% if selected_books|count == 0 %}
+                <article class="four_quarter">
+                    <h1 style="text-align: center">Empty!</h1>
+                </article>
+            {% else %}
+                {% for selected_book in selected_books %}
+                    <article class="four_quarter">
+                        <img src="{{ selected_book.image_url }}" width="80" height="80" alt="{{ selected_book.title }}">
+                        <h2 style="margin-bottom: 0px">{{ selected_book.title }}</h2>
+                        {% for author in selected_book.authors %}
+                            <h3>
+                                <a href="{{ url_for('book_bp.book_list', author_id=author.unique_id, search_type='author') }}">{{ author.full_name }}</a>&nbsp;&nbsp
+                            </h3>
+                        {% endfor %}
+                        <p>
+                            <span>Rating&nbsp;{{ selected_book.average_rating }}</span>
+                            <span>&nbsp;·&nbsp;</span>
+                            <span>{{ selected_book.ratings_count }}&nbsp;ratings</span>
+                            <span>&nbsp;·&nbsp;</span>
+                            <span>{{ selected_book.text_reviews_count }}&nbsp;reviews</span>
+                        </p>
+                        <span>Published</span>
+                        {% if selected_book.release_year is not none %}
+                            <span><a
+                                    href="{{ url_for('book_bp.book_list', release_year=selected_book.release_year, search_type='release_year') }}"> {{ selected_book.release_year }}</a></span>
+                        {% endif %}
+                        {% if selected_book.publisher is not none %}
+                            <span>by
+                                {% if selected_book.publisher.name != 'N/A' %}
+                                    <a href="{{ url_for('book_bp.book_list', publisher_name=selected_book.publisher.name, search_type='publisher') }}">{{ selected_book.publisher.name }}</a>
+                                {% else %}
+                                    {{ selected_book.publisher.name }}
+                                {% endif %}
+                </span>
+                        {% endif %}
+                        <footer class="more"><a
+                                href="{{ url_for('book_bp.book_list', book_id=selected_book.book_id, search_type='book') }}">Read
+                            More
+                            &raquo;</a></footer>
+                    </article>
+                {% endfor %}
+            {% endif %}
+        </section>
+        {% include 'recommendation.html' %}
+    </div>
+{% endblock %}

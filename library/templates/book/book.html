@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div id="homepage">
+        <section id="services" class="clear">
+            {% for selected_book in selected_books %}
+                <article class="three_third">
+                    <a href="{{ selected_book.link }}" target="_blank">
+                        <img src="{{ selected_book.image_url }}" width="80" height="80" alt="{{ selected_book.title }}">
+                    </a>
+                    <h2>{{ selected_book.title }}</h2>
+                    {% for author in selected_book.authors %}
+                        <h3>
+                            <a href="{{ url_for('book_bp.book_list', author_id=author.unique_id, search_type='author') }}">{{ author.full_name }}&nbsp;&nbsp;</a>
+                        </h3>
+                    {% endfor %}
+                    <p>
+                        <span>Rating&nbsp;{{ selected_book.average_rating }}</span>
+                        <span>&nbsp;·&nbsp;</span>
+                        <span>{{ selected_book.ratings_count }}&nbsp;ratings</span>
+                        <span>&nbsp;·&nbsp;</span>
+                        <span>{{ selected_book.text_reviews_count }}&nbsp;reviews</span>
+                    </p>
+                    <span>Published</span>
+                    {% if selected_book.release_year is not none %}
+                        <span><a
+                                href="{{ url_for('book_bp.book_list', release_year=selected_book.release_year, search_type='release_year') }}"> {{ selected_book.release_year }}</a></span>
+                        &nbsp;
+                    {% endif %}
+                    {% if selected_book.publisher is not none %}
+                        <span>by
+                            {% if selected_book.publisher.name != 'N/A' %}
+                                <a href="{{ url_for('book_bp.book_list', publisher_name=selected_book.publisher.name, search_type='publisher') }}">{{ selected_book.publisher.name }}</a>
+                            {% else %}
+                                {{ selected_book.publisher.name }}
+                            {% endif %}
+                </span>
+                    {% endif %}
+                    <p style="white-space: pre-line">{{ selected_book.description }}</p>
+                    <footer class="more"><a
+                            href="{{ url_for('book_bp.book_list', book_id=selected_book.book_id, search_type='book') }}">Read
+                        More
+                        &raquo;</a></footer>
+                </article>
+            {% endfor %}
+        </section>
+        <footer class="pagination">
+            {% if prev_authors_url is not none %}
+                <a href="{{ prev_authors_url }}">&laquo;Previous</a>
+            {% else %}
+                <a class="pagination-disable" disabled>&laquo;Previous</a>
+            {% endif %}
+            <span>&nbsp;&nbsp;</span>
+            {% if next_authors_url is not none %}
+                <a href="{{ next_authors_url }}">Next&raquo;</a>
+            {% else %}
+                <a class="pagination-disable" disabled>Next&raquo;</a>
+            {% endif %}
+        </footer>
+    </div>
+{% endblock %}

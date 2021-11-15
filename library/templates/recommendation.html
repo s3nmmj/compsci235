@@ -1,0 +1,31 @@
+<section id="services" class="clear">
+    <h2 id="recommendations">Recommendations</h2>
+    {% for i in range(recommended_books|count) %}
+        <article class="one_quarter {% if (i+1)%4==0 %} lastbox {% endif %}">
+            <figure>
+                <a href="{{ recommended_books[i].link }}" target="_blank">
+                    <img src="{{ recommended_books[i].image_url }}" width="215" height="180"
+                         alt="{{ recommended_books[i].title }}">
+                </a>
+                <figcaption>
+                    <h2>{{ recommended_books[i].title }}</h2>
+                    {% for author in recommended_books[i].authors %}
+                        <h3>
+                            <a href="{{ url_for('book_bp.book_list', author_id=author.unique_id, search_type='author') }}">{{ author.full_name }}&nbsp;&nbsp;</a>
+                        </h3>
+                    {% endfor %}
+                    <p>
+                        <span>Rating&nbsp;{{ recommended_books[i].average_rating }}</span>
+                        <span>&nbsp;·&nbsp;</span>
+                        <span>{{ recommended_books[i].ratings_count }}&nbsp;ratings</span>
+                        <span>&nbsp;·&nbsp;</span>
+                        <span>{{ recommended_books[i].text_reviews_count }}&nbsp;reviews</span>
+                    </p>
+                    <footer class="more"><a
+                            href="{{ url_for('book_bp.book_list', book_id=recommended_books[i].book_id, search_type='book') }}">Read
+                        More &raquo;</a></footer>
+                </figcaption>
+            </figure>
+        </article>
+    {% endfor %}
+</section>

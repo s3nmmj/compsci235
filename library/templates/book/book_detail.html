@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div id="homepage">
+        <section id="services" class="clear">
+            <article class="three_third">
+                <h2>{{ selected_book.title }}</h2>
+                <img src="{{ selected_book.image_url }}" width="80" height="80" alt="{{ selected_book.title }}">
+                {% for author in selected_book.authors %}
+                    <h3>
+                        <a href="{{ url_for('book_bp.book_list', author_id=author.unique_id, search_type='author') }}">{{ author.full_name }}</a>&nbsp;&nbsp
+                    </h3>
+                {% endfor %}
+                <p>
+                    <span>Rating&nbsp;{{ selected_book.average_rating }}</span>
+                    <span>&nbsp;·&nbsp;</span>
+                    <span>{{ selected_book.ratings_count }}&nbsp;ratings</span>
+                    <span>&nbsp;·&nbsp;</span>
+                    <span>{{ selected_book.text_reviews_count }}&nbsp;reviews</span>
+                </p>
+                <span>Published</span>
+                {% if selected_book.release_year is not none %}
+                    <span><a
+                            href="{{ url_for('book_bp.book_list', release_year=selected_book.release_year, search_type='release_year') }}"> {{ selected_book.release_year }}</a></span>
+                {% endif %}
+                {% if selected_book.publisher is not none %}
+                    <span>by
+                        {% if selected_book.publisher.name != 'N/A' %}
+                            <a href="{{ url_for('book_bp.book_list', publisher_name=selected_book.publisher.name, search_type='publisher') }}">{{ selected_book.publisher.name }}</a>
+                        {% else %}
+                            {{ selected_book.publisher.name }}
+                        {% endif %}
+                </span>
+                {% endif %}
+                <p style="white-space: pre-line">{{ selected_book.description }}</p>
+            </article>
+            <footer class="more">
+                <a href="{{ url_for('book_bp.book_list', book_id=selected_book.book_id, search_type='book', display_shelf_input='true') }}">Add
+                    to Reading List</a>
+            </footer>
+            {% if display_shelf_input is not none and display_shelf_input == 'true' %}
+                <article class="three_third">
+                    <form action="{{ reading_list_handler_url }}" method="post">
+                        {{ reading_list_form.book_id }}
+                        {{ reading_list_form.csrf_token }}
+                        <!-- Need to include this token - Flask WTForms requires it. -->
+                        <br>
+                        <div class="form-field">
+                            {{ reading_list_form.reading_list.label }}
+                            </br>{{ reading_list_form.reading_list() }}
+                        </div>
+                        {{ reading_list_form.submit }}
+                    </form>
+                </article>
+            {% endif %}
+        </section>
+        {% include 'book/book_review.html' %}
+        {% include 'recommendation.html' %}
+    </div>
+{% endblock %}

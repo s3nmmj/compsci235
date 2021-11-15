@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Library</title>
+
+    <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/main.css') }}"
+    />
+    <link
+      rel="bookmark"
+	  type="image/x-icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+</head>
+<body>
+{% include 'header.html' %}
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+        <!-- Main content block to be supplied by page. -->
+        {% block content %} {% endblock %}
+    </div>
+</div>
+{% include 'footer.html' %}
+</body>
+</html>

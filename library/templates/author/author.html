@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div id="homepage">
+        <section id="services" class="clear">
+            {% for author in selected_authors %}
+                <article class="four_quarter">
+                    <figure>
+                        <strong><a
+                                href="{{ url_for('book_bp.book_list', author_id=author.unique_id, search_type='author') }}">{{ author.full_name }}</a></strong>
+                        <div>
+                            <h3>
+                                <span>Rating&nbsp;{{ author.average_rating }}</span>
+                                <span>&nbsp;·&nbsp;</span>
+                                <span>{{ author.ratings_count }}&nbsp;ratings</span>
+                                <span>&nbsp;·&nbsp;</span>
+                                <span>{{ author.text_reviews_count }}&nbsp;reviews</span>
+                            </h3>
+                            <footer class="more"><a href="{{ url_for('book_bp.book_list', author_id=author.unique_id, search_type='author') }}">Books &raquo;</a></footer>
+                        </div>
+                    </figure>
+                </article>
+            {% endfor %}
+        </section>
+        <footer class="pagination">
+            {% if prev_authors_url is not none %}
+                <a href="{{ prev_authors_url }}">&laquo;Previous</a>
+            {% else %}
+                <a class="pagination-disable" disabled>&laquo;Previous</a>
+            {% endif %}
+            <span>&nbsp;&nbsp;</span>
+            {% if next_authors_url is not none %}
+                <a href="{{ next_authors_url }}">Next&raquo;</a>
+            {% else %}
+                <a class="pagination-disable" disabled>Next&raquo;</a>
+            {% endif %}
+        </footer>
+
+    </div>
+{% endblock %}
